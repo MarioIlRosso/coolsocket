@@ -1,0 +1,27 @@
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub enum SocketDomain {
+    Local,
+    Ipv4,
+    Ax25,
+    Ipx,
+    AppleTalk,
+    X25,
+    Ipv6,
+    DecNet,
+    Key,
+    Netlink,
+    Packet,
+    Rds,
+    Pppox,
+    Llc,
+    InfiniBand,
+    Mpls,
+    CtrlAreaNetwork,
+    Tipc,
+    Bluetooth,
+    Alg,
+    Vsock,
+    Kcm,
+    Xdp,
+}
