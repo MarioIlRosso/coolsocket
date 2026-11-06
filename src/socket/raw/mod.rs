@@ -46,9 +46,18 @@ impl RawSocket {
     ///
     /// This uses [`libc::socket`].
     ///
-    /// # Safety
-    /// The `domain`, `kind`, and `protocol` argument must all be compatible with each other.
-    pub unsafe fn new(
+    /// # Errors
+    ///
+    /// If any of these conditions happen, the function will return an error.
+    ///
+    /// - Permission to create socket was denied (returns [`RawSocketCreationError::NoPermission`]).
+    /// - Unavailable protocol (returns [`RawSocketCreationError::UnknownProtocol`]).
+    /// - If the process open fd limit is reached (returns [`RawSocketCreationError::ProcessFdLimitReached`]).
+    /// - If the system open fd limit is reached (returns [`RawSocketCreationError::SystemFdLimitReached`]).
+    /// - The system doesn't have enough resources to create the socket (returns [`RawSocketCreationError::NoResources`]).
+    /// - protocol and domain arguments are incompatible (returns [`RawSocketCreationError::IncompatibleProtocol`]).
+    /// - General error (returns [`RawSocketCreationError::IncompatibleProtocol`]).
+    pub fn new(
         domain: SocketDomain,
         kind: SocketKind,
         protocol: i32,
