@@ -61,7 +61,7 @@ impl RawSocket {
                 libc::EINVAL => Err(RawSocketCreationError::UnknownProtocol),
                 libc::EMFILE => Err(RawSocketCreationError::ProcessFdLimitReached),
                 libc::ENFILE => Err(RawSocketCreationError::SystemFdLimitReached),
-                libc::ENOBUFS | libc::ENOMEM => Err(RawSocketCreationError::SystemFdLimitReached),
+                libc::ENOBUFS | libc::ENOMEM => Err(RawSocketCreationError::NoResources),
                 libc::EPROTONOSUPPORT => Err(RawSocketCreationError::IncompatibleProtocol),
                 _ => Err(RawSocketCreationError::Other(err.to_string())),
             };
@@ -71,9 +71,10 @@ impl RawSocket {
 
         Ok(Self { file_descriptor })
     }
+}
 
-    /// Returns the file descriptor of the [`RawSocket`].
-    pub fn fd(&self) -> BorrowedFd<'_> {
+impl AsFd for RawSocket {
+    fn as_fd(&self) -> BorrowedFd<'_> {
         self.file_descriptor.as_fd()
     }
 }
