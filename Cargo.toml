@@ -5,6 +5,7 @@ edition = "2024"
 
 [dependencies]
 libc = "0.2.191"
+thiserror = "2.0.21"
 
 [lints.rust]
 missing_docs = "deny"
