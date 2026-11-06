@@ -22,8 +22,8 @@ pub enum RawSocketCreationError {
     NoResources,
     #[error("protocol is incompatible with the domain")]
     IncompatibleProtocol,
-    #[error("{0}")]
-    Other(String),
+    #[error(transparent)]
+    Other(#[from] std::io::Error),
 }
 
 /// Struct to handle a socket file descriptor.
@@ -63,7 +63,7 @@ impl RawSocket {
                 libc::ENFILE => Err(RawSocketCreationError::SystemFdLimitReached),
                 libc::ENOBUFS | libc::ENOMEM => Err(RawSocketCreationError::NoResources),
                 libc::EPROTONOSUPPORT => Err(RawSocketCreationError::IncompatibleProtocol),
-                _ => Err(RawSocketCreationError::Other(err.to_string())),
+                _ => Err(RawSocketCreationError::Other(err)),
             };
         }
 
