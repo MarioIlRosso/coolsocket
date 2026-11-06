@@ -1,3 +1,4 @@
 #![doc = include_str!("../README.md")]
 
-mod socket;
+/// Module to make working with low level sockets easier, providing abstractions.
+pub mod socket;
