@@ -25,7 +25,7 @@ pub struct SocketKind {
 
 impl SocketKind {
     /// Creates a new socket type given a [`SocketType`], and other parameters
-    pub fn new(sock_type: SocketType, non_blocking: bool, close_on_exec: bool) -> Self {
+    pub const fn new(sock_type: SocketType, non_blocking: bool, close_on_exec: bool) -> Self {
         Self { sock_type, non_blocking, close_on_exec }
     }
 }
