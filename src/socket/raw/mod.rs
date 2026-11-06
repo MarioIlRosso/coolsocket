@@ -13,9 +13,9 @@ pub enum RawSocketCreationError {
     #[doc = "Permission to create a socket of the specified type and/or protocol is denied."]
     #[error("permission to create a socket of the specified type and/or protocol is denied")]
     NoPermission,
-    #[doc = "Unknown protocol, or invalid flags in kind."]
-    #[error("unknown protocol, or invalid flags in kind")]
-    UnknownProtocol,
+    #[doc = "The arguments used to create the socket were invalid."]
+    #[error("the arguments used to create the socket were invalid")]
+    InvalidArguments,
     #[doc = "The per-process limit of open file descriptors has been reached."]
     #[error("the per-process limit of open file descriptors has been reached")]
     ProcessFdLimitReached,
@@ -56,7 +56,7 @@ impl RawSocket {
     /// - If the system open fd limit is reached (returns [`RawSocketCreationError::SystemFdLimitReached`]).
     /// - The system doesn't have enough resources to create the socket (returns [`RawSocketCreationError::NoResources`]).
     /// - protocol and domain arguments are incompatible (returns [`RawSocketCreationError::IncompatibleProtocol`]).
-    /// - General error (returns [`RawSocketCreationError::IncompatibleProtocol`]).
+    /// - General error (returns [`RawSocketCreationError::Other`]).
     pub fn new(
         domain: SocketDomain,
         kind: SocketKind,
@@ -74,7 +74,7 @@ impl RawSocket {
 
             return match raw_err {
                 libc::EACCES => Err(RawSocketCreationError::NoPermission),
-                libc::EINVAL => Err(RawSocketCreationError::UnknownProtocol),
+                libc::EINVAL => Err(RawSocketCreationError::InvalidArguments),
                 libc::EMFILE => Err(RawSocketCreationError::ProcessFdLimitReached),
                 libc::ENFILE => Err(RawSocketCreationError::SystemFdLimitReached),
                 libc::ENOBUFS | libc::ENOMEM => Err(RawSocketCreationError::NoResources),
