@@ -10,18 +10,25 @@ use thiserror::Error;
 #[allow(missing_docs)]
 #[derive(Debug, Error)]
 pub enum RawSocketCreationError {
+    #[doc = "Permission to create a socket of the specified type and/or protocol is denied."]
     #[error("permission to create a socket of the specified type and/or protocol is denied")]
     NoPermission,
+    #[doc = "Unknown protocol, or invalid flags in kind."]
     #[error("unknown protocol, or invalid flags in kind")]
     UnknownProtocol,
+    #[doc = "The per-process limit of open file descriptors has been reached."]
     #[error("the per-process limit of open file descriptors has been reached")]
     ProcessFdLimitReached,
+    #[doc = "The system limit of open file descriptors has been reached."]
     #[error("the system limit of open file descriptors has been reached")]
     SystemFdLimitReached,
+    #[doc = "Not enough system resources/memory to create socket."]
     #[error("not enough system resources/memory to create socket")]
     NoResources,
+    #[doc = "Protocol is incompatible with the domain."]
     #[error("protocol is incompatible with the domain")]
     IncompatibleProtocol,
+    /// General error that an implementation of the socket could return.
     #[error(transparent)]
     Other(#[from] std::io::Error),
 }
