@@ -70,7 +70,10 @@ impl RawSocket {
         // Error in the socket call.
         if raw_file_descriptor < 0 {
             let err = Error::last_os_error();
-            let raw_err = err.raw_os_error().unwrap();
+            // We can't simply unwrap here cause clippy would flag and tell us to add a panic
+            // section.
+            // This shouldn't happen anyway, as we used `last_os_error().raw_os_error()` correctly.
+            let raw_err = err.raw_os_error().unwrap_or(0);
 
             return match raw_err {
                 libc::EACCES => Err(RawSocketCreationError::NoPermission),
