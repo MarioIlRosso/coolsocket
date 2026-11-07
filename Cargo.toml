@@ -4,6 +4,9 @@ version = "0.1.1"
 edition = "2024"
 categories = ["networking"]
 keywords = ["socket", "network"]
+repository = "https://github.com/MarioIlRosso/coolsocket.git"
+license = "MIT"
+description = "rust crate to easily use low level sockets"
 
 [dependencies]
 libc = "0.2.191"
