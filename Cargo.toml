@@ -2,6 +2,8 @@
 name = "coolsocket"
 version = "0.1.0"
 edition = "2024"
+categories = ["networking"]
+keywords = ["socket", "network"]
 
 [dependencies]
 libc = "0.2.191"
