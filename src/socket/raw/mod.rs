@@ -57,7 +57,7 @@ impl RawSocket {
     /// - The system doesn't have enough resources to create the socket (returns [`RawSocketCreationError::NoResources`]).
     /// - protocol and domain arguments are incompatible (returns [`RawSocketCreationError::IncompatibleProtocol`]).
     /// - General error (returns [`RawSocketCreationError::Other`]).
-    pub fn new(
+    pub fn try_new(
         domain: SocketDomain,
         kind: SocketKind,
         protocol: i32,

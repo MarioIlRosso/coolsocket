@@ -13,11 +13,27 @@ impl ArpSocket {
     ///
     /// Note that this operation may commonly fail, as creating an ARP socket requires elevated
     /// privileges.
-    pub fn new(non_blocking: bool, close_on_exec: bool) -> Result<Self, RawSocketCreationError> {
+    ///
+    /// # Errors
+    ///
+    /// If any of these conditions happen, the function will return an error.
+    ///
+    /// - Permission to create socket was denied (returns [`RawSocketCreationError::NoPermission`]).
+    /// - Unavailable protocol (returns [`RawSocketCreationError::UnknownProtocol`]).
+    /// - If the process open fd limit is reached (returns [`RawSocketCreationError::ProcessFdLimitReached`]).
+    /// - If the system open fd limit is reached (returns [`RawSocketCreationError::SystemFdLimitReached`]).
+    /// - The system doesn't have enough resources to create the socket (returns [`RawSocketCreationError::NoResources`]).
+    /// - protocol and domain arguments are incompatible (returns [`RawSocketCreationError::IncompatibleProtocol`]).
+    /// - General error (returns [`RawSocketCreationError::Other`]).
+    pub fn try_new(
+        non_blocking: bool,
+        close_on_exec: bool,
+    ) -> Result<Self, RawSocketCreationError> {
         use crate::socket::raw::{SocketDomain, SocketKind, SocketType};
 
         let socket_kind = SocketKind::new(SocketType::Raw, non_blocking, close_on_exec);
-        let socket = RawSocket::new(SocketDomain::Packet, socket_kind, libc::ETH_P_ARP.to_be())?;
+        let socket =
+            RawSocket::try_new(SocketDomain::Packet, socket_kind, libc::ETH_P_ARP.to_be())?;
 
         let arp_socket = ArpSocket { raw_socket: socket };
 
